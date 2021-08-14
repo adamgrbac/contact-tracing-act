@@ -1,4 +1,4 @@
-# NSW Health COVID-19 Contact Tracing Emailer
+# ACT Health COVID-19 Contact Tracing Emailer
 
 This project checks for new / updated locations on the ACT Health COVID-19 Contact Tracing [site](https://www.covid19.act.gov.au/act-status-and-response/act-covid-19-exposure-locations), and emails the results to a distribution list.
 
