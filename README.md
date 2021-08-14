@@ -15,7 +15,7 @@ It was a built as a bit of a time-saver so I didn't have to keep checking the we
 ## Scripts
 
 * contact-tracing-act.py - The main script that does the heavy lifting.
-	*  Example usage - `python contact-tracing-nsw.py`
+	*  Example usage - `python contact-tracing-act.py`
 * utils.py - Some helper functions to clean up the code, imported as a package.
 
 ## Packages Used
