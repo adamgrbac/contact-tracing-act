@@ -6,9 +6,9 @@ from datetime import datetime
 
 def convert_date(date_str: str) -> datetime:
     try:
-        date_val = datetime.strptime(date_str, '%d %b %Y').date()
+        date_val = datetime.strptime(date_str.strip(), '%A, %d %B %Y').date()
     except Exception as e:
-        date_val = datetime.strptime(date_str, '%d %B %Y').date()
+        date_val = datetime.strptime(date_str.strip(), '%A, %d %b %Y').date()
     finally:
         return date_val
         
