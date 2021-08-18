@@ -6,9 +6,9 @@ from datetime import datetime
 
 def convert_date(date_str: str) -> datetime:
     try:
-        date_val = datetime.strptime(date_str.strip(), '%A, %d %B %Y').date()
+        date_val = datetime.strptime(date_str.strip(), '%d/%m/%Y - %A').date()
     except Exception as e:
-        date_val = datetime.strptime(date_str.strip(), '%A, %d %b %Y').date()
+        date_val = datetime.strptime(date_str.strip(), '%d/%m%Y - %A').date()
     finally:
         return date_val
         
@@ -113,13 +113,12 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """
 
     col_names = list(df.columns)
-
-    df["severity"] = df["Severity"]
-    df["data_date"] = df["date"].apply(convert_date)
-    df["data_location"] = df["place"].apply(lambda x: x.strip())
-    df["data_suburb"] = df["suburb"]
-    df["data_datetext"] = df["date"]
-    df["data_timetext"] = df.apply(lambda row: row["arrival time"]+" - "+row["departure time"],axis=1)
+    df["severity"] = df["Contact"]
+    df["data_date"] = df["Date"].apply(convert_date)
+    df["data_location"] = df.apply(lambda row: row["Exposure Site"].strip()+", "+row["Street"].strip(), axis=1)
+    df["data_suburb"] = df["Suburb"]
+    df["data_datetext"] = df["Date"]
+    df["data_timetext"] = df.apply(lambda row: row["Arrival Time"]+" - "+row["Departure Time"],axis=1)
     df["data_added"] = datetime.now()
 
     df = df.drop(col_names, axis=1)

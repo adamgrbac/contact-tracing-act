@@ -5,6 +5,7 @@ import yagmail
 import utils
 import yaml
 from bs4 import BeautifulSoup
+import re
 
 # Load email config
 with open("email_config.yml", "r") as f:
@@ -26,37 +27,12 @@ res = requests.get("https://www.covid19.act.gov.au/act-status-and-response/act-c
 page = BeautifulSoup(res.text, 'html.parser')
 
 # Get tables elements from parsed paged
-tables = page.find_all("table")
+csv_file = page.find_all(text=re.compile('(https.*[.]csv)'))
+csv_url = re.search('(https.*[.]csv)',csv_file[0]).group(0)
 
-# Create empty list of dfs to merge later
-dfs = []
-
-# Table names
-table_names = ["Close","Casual","Low"]
-
-# Extract data from each table
-for table_name, table in zip(table_names,tables):
-    # Get Column Names
-    headers = []
-    for header in table.thead.find_all("th"):
-        headers.append(header.get_text().lower().strip())
-    
-    # Convert <tr> attributes to list of dicts
-    data = []
-    for row in table.tbody.find_all("tr"):
-        row_data = {"Severity": table_name}
-        for col, cell in zip(headers,row.find_all("td")):
-            row_data[col] = cell.get_text()
-        data.append(row_data)
-    
-    # Convert list of dicts to DataFrame
-    df = pd.DataFrame(data)
-
-    # Append df to list, to be merged later
-    dfs.append(df)
-
+# Convert list of dicts to DataFrame
+df = pd.read_csv(csv_url)
 # Merge dfs into one df and clean
-df = pd.concat(dfs)
 df = utils.clean_dataframe(df)
 
 # Load latest snapshot into tmp table
