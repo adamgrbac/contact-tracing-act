@@ -115,7 +115,7 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     col_names = list(df.columns)
     df["severity"] = df["Contact"]
     df["data_date"] = df["Date"].apply(convert_date)
-    df["data_location"] = df.apply(lambda row: row["Exposure Site"].strip()+", "+row["Street"].strip(), axis=1)
+    df["data_location"] = df.apply(lambda row: str(row["Exposure Site"]).strip()+", "+str(row["Street"]).strip(), axis=1)
     df["data_suburb"] = df["Suburb"]
     df["data_datetext"] = df["Date"]
     df["data_timetext"] = df.apply(lambda row: row["Arrival Time"]+" - "+row["Departure Time"],axis=1)
@@ -123,7 +123,7 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.drop(col_names, axis=1)
     df = df.sort_values(["data_date","data_location","data_datetext","data_timetext","data_added"])
-
+    df = df.groupby(["data_date","data_location","data_datetext","data_timetext"]).agg({"severity":"last","data_suburb":"last","data_added":"last"}).reset_index()
     return df
 
 

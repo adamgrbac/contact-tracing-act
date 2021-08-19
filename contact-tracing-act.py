@@ -31,7 +31,8 @@ csv_file = page.find_all(text=re.compile('(https.*[.]csv)'))
 csv_url = re.search('(https.*[.]csv)',csv_file[0]).group(0)
 
 # Convert list of dicts to DataFrame
-df = pd.read_csv(csv_url)
+df = pd.read_csv(csv_url,names=["Event Id","Status","Exposure Site","Street","Suburb","State","Date","Arrival Time","Departure Time","Contact"],index_col=False)
+
 # Merge dfs into one df and clean
 df = utils.clean_dataframe(df)
 
