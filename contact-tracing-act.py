@@ -6,6 +6,7 @@ import utils
 import yaml
 from bs4 import BeautifulSoup
 import re
+import urllib
 
 # Load email config
 with open("email_config.yml", "r") as f:
@@ -30,8 +31,17 @@ page = BeautifulSoup(res.text, 'html.parser')
 csv_file = page.find_all(text=re.compile('(https.*[.]csv)'))
 csv_url = re.search('(https.*[.]csv)',csv_file[0]).group(0)
 
+file_obj = urllib.request.urlopen(csv_url)
+lines = [line.decode('utf-8').split(",") for line in file_obj]
+columns = None
+if lines[0][0] != "Event Id":
+    columns = ["Event Id","Status","Exposure Site","Street","Suburb","State","Date","Arrival Time","Departure Time","Contact"]
+
 # Convert list of dicts to DataFrame
-df = pd.read_csv(csv_url,names=["Event Id","Status","Exposure Site","Street","Suburb","State","Date","Arrival Time","Departure Time","Contact"],index_col=False)
+if columns:
+    df = pd.read_csv(csv_url, index_col=False, names=columns)
+else:
+    df = pd.read_csv(csv_url)
 
 # Merge dfs into one df and clean
 df = utils.clean_dataframe(df)
