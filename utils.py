@@ -5,12 +5,13 @@ from datetime import datetime
 
 
 def convert_date(date_str: str) -> datetime:
-    try:
-        date_val = datetime.strptime(date_str.strip(), '%d/%m/%Y - %A').date()
-    except Exception as e:
-        date_val = datetime.strptime(date_str.strip(), '%d/%m%Y - %A').date()
-    finally:
-        return date_val
+    date_formats = ['%d/%m/%Y - %A', '%d/%m%Y - %A','%d/%m/%Y- %A']
+    for date_format in date_formats:
+        try:
+            return datetime.strptime(date_str.strip(), date_format).date()
+        except Exception as e:
+            pass 
+    raise Exception("No Acceptable Date Format Present!")
         
         
 def prep_database(con: sqlite3.Connection) -> None:
