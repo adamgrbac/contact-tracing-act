@@ -67,6 +67,8 @@ if len(new_records) > 0 or len(updated_records) > 0:
     if len(updated_records) > 0:
         contents.append("Updated Contact Tracing Locations added to the website:")
         contents.append(utils.htmlify(updated_records))
+    
+    contents.append('<br><br><br>If you wish to unsubscribe from this service, click <a href="https://covidmailer.au.ngrok.io/unsubscribe">here</a> and fill out the form.')
 
     # Send email to dist list
     yag.send(bcc=email_config["dist_list"], subject="New ACT Contact Tracing Locations!", contents=contents)
